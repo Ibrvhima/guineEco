@@ -1,0 +1,227 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f4f9;
+  color: #0082bb; /* Couleur principale d'Ecobank */
+  height: 100vh;
+  padding: 2rem;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background-color: #0082bb; /* Couleur bleu foncé Ecobank */
+  color: #ffffff;
+}
+
+.welcome {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.logo {
+  height: 5rem;
+}
+
+.login {
+  display: flex;
+}
+
+.login__input {
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.4rem;
+  background-color: #ffffff; /* Fond blanc */
+  color: #0082bb;
+  width: 12rem;
+  margin-right: 1rem;
+  border: 1px solid #0082bb; /* Bordure bleu Ecobank */
+  transition: all 0.3s;
+}
+
+.login__input:focus {
+  outline: none;
+  background-color: #f0f0f0;
+}
+
+.login__btn {
+  border: none;
+  background-color: #009933; /* Vert Ecobank */
+  color: #ffffff;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.login__btn:hover {
+  background-color: #007a29;
+}
+
+.app {
+  max-width: 120rem;
+  margin: 5rem auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Amélioration du layout */
+  grid-gap: 2rem;
+}
+
+.balance {
+  grid-column: 1 / span 2;
+  background-color: #0082bb;
+  color: #ffffff;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance__label {
+  font-size: 2.4rem;
+}
+
+.balance__value {
+  font-size: 3.5rem;
+  font-weight: 700;
+}
+
+.movements {
+  background-color: #ffffff;
+  padding: 2rem;
+  overflow-y: auto;
+  border: 1px solid #0082bb;
+  border-radius: 0.5rem;
+}
+
+.movements__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #0082bb;
+}
+
+.movements__type {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.movements__type--deposit {
+  color: #009933; /* Vert pour les dépôts */
+}
+
+.movements__type--withdrawal {
+  color: #e74c3c; /* Rouge pour les retraits */
+}
+
+.movements__value {
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  background-color: #0082bb;
+  color: #ffffff;
+  padding: 2rem;
+  margin-top: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.summary__label {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.summary__value {
+  font-size: 1.8rem;
+}
+
+.btn--sort {
+  background-color: #009933;
+  border: none;
+  color: #ffffff;
+  padding: 0.8rem 2rem;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn--sort:hover {
+  background-color: #007a29;
+}
+
+.operation {
+  background-color: #ffffff;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #0082bb;
+  border-radius: 0.5rem;
+}
+
+.operation h2 {
+  margin-bottom: 1.2rem;
+  font-size: 1.8rem;
+}
+
+.form__input {
+  width: 100%;
+  border: 1px solid #0082bb;
+  background-color: #ffffff;
+  font-size: 1.4rem;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.form__btn {
+  border: none;
+  background-color: #009933;
+  color: #ffffff;
+  font-size: 1.4rem;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.form__btn:hover {
+  background-color: #007a29;
+}
+
+.logout-timer {
+  padding: 2rem;
+  text-align: right;
+  font-size: 1.4rem;
+  background-color: #e74c3c; /* Rouge pour indiquer une action d'urgence */
+  color: #ffffff;
+}
+.hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app {
+    grid-template-columns: 1fr; /* Adaptation pour les petits écrans */
+  }
+
+  .balance {
+    flex-direction: column;
+  }
+
+  .movements__row,
+  .summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
