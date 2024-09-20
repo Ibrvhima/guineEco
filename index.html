@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="shortcut icon" type="image/png" href="/icon.png" />
+    <link rel="shortcut icon" type="image/png" href="icon.png" />
     <link
       href="https://fonts.googleapis.com/css?family=Poppins:400,500,600&display=swap"
       rel="stylesheet"
@@ -22,12 +22,14 @@
           type="text"
           placeholder="Utilisateur"
           class="login__input login__input--user"
+          required
         />
         <input
           type="text"
           placeholder="Code"
           maxlength="4"
           class="login__input login__input--pin"
+          required
         />
         <button class="login__btn">&rarr;</button>
       </form>
@@ -76,8 +78,16 @@
       <div class="operation operation--transfer">
         <h2>Transférer de l'argent</h2>
         <form class="form form--transfer">
-          <input type="text" class="form__input form__input--to" />
-          <input type="number" class="form__input form__input--amount" />
+          <input
+            type="text"
+            placeholder="Bénéficiaire"
+            class="form__input form__input--to"
+          />
+          <input
+            type="number"
+            placeholder="Montant"
+            class="form__input form__input--amount"
+          />
           <button class="form__btn form__btn--transfer">&rarr;</button>
           <label class="form__label">Transférer à</label>
           <label class="form__label">Montant</label>
@@ -98,9 +108,14 @@
       <div class="operation operation--close">
         <h2>Clôturer le compte</h2>
         <form class="form form--close">
-          <input type="text" class="form__input form__input--user" />
+          <input
+            type="text"
+            placeholder="Utilisateur"
+            class="form__input form__input--user"
+          />
           <input
             type="password"
+            placeholder="Code"
             maxlength="6"
             class="form__input form__input--pin"
           />
@@ -121,3 +136,4 @@
     <script src="script.js"></script>
   </body>
 </html>
+

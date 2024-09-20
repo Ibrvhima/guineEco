@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
+} 
 
 html {
   font-size: 62.5%;
@@ -103,6 +103,9 @@ nav {
   overflow-y: auto;
   border: 1px solid #0082bb;
   border-radius: 0.5rem;
+  height: 150px;
+  overflow: scroll;
+  scrollbar-width: thin; 
 }
 
 .movements__row {
@@ -206,7 +209,8 @@ nav {
   background-color: #e74c3c; /* Rouge pour indiquer une action d'urgence */
   color: #ffffff;
 }
-.hidden {
+
+.hidden{
   display: none;
 }
 
