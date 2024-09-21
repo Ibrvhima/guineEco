@@ -108,36 +108,26 @@ function login(e) {
 
 btnLogin.addEventListener('click', login);
 
-//////////////////////////////////////////////////////////////
+//////////////////////GESTION DES MOUVEMENTS BANCAIRES/////////////////////
 
 function displayMovements(arr) {
   arr.forEach(element => {
-    if (element > 0) {
-      console.log(element);
+    
+      const mouvementType = element > 0 ? 'deposit': 'withdrawal'
 
       movementRow.insertAdjacentHTML(
         'beforebegin',
         `
         <div class="movements__row">
-          <div class="movements__type movements__type--deposit">Dépot</div>
+          <div class="movements__type movements__type--${mouvementType}">${mouvementType === 'deposit'? 'Dépot' : 'Rétrait' } </div>
           <div class="movements__date">Il y a 3 jours</div>
           <div class="movements__value">${element}€</div>
         </div>
-       
         `
       );
-    } else {
-      movementRow.insertAdjacentHTML(
-        'beforebegin',
-        `
-        <div class="movements__row">
-          <div class="movements__type movements__type--withdrawal">Retrait</div>
-          <div class="movements__date">Il y a 3 jours</div>
-          <div class="movements__value">${element}€</div>
-        </div>
-       
-        `
-      );
-    }
-  });
+    } 
+  );
 }
+
+//////GESTION DES TRI///////////////////////////////
+
