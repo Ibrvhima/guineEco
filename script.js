@@ -200,7 +200,7 @@ function sendMoney(e) {
       displayMovements(currentAccount.movements);
       calcDisplaySummary();
       calcDisplayBalance();
-      transferLabel.classList.remove('red')
+      transferLabel.classList.remove('red');
       transferLabel.textContent = 'Transfert effectué avec succès';
       inputTransferTo.value = inputTransferAmount.value = '';
     } else {
@@ -228,21 +228,37 @@ function requestLoan(e) {
       displayMovements(currentAccount.movements);
       calcDisplaySummary();
       calcDisplayBalance();
-      loanLabel.textContent = "Prêt effectué avec succès".classList.remove('red')
+      inputLoanAmount.value = '';
+      loanLabel.textContent = 'Prêt effectué avec succès'.classList.remove(
+        'red'
+      );
     } else {
-      loanLabel.textContent = "Montant élévé"
+      loanLabel.textContent = 'Montant élévé';
     }
   } else {
-    loanLabel.textContent = "Montant invalide"
+    loanLabel.textContent = 'Montant invalide';
   }
 }
 
 btnLoan.addEventListener('click', requestLoan);
 
-
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-function closeAccount(){
-
+function closeAccount(e) {
+  e.preventDefault();
+  const index = accounts.indexOf(currentAccount);
+  if (
+    inputCloseUsername.value === currentAccount.owner &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    accounts.splice(index, 1);
+    containerApp.classList.add('hidden');
+    labelWelcome.textContent = 'Connectez-vous pour commencer';
+    alert(`${inputCloseUsername.value} est retiré avec succès `)
+  } else {
+    alert('les information ne correspondent pas');
+  }
 }
+
+btnClose.addEventListener('click', closeAccount);
