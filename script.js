@@ -77,29 +77,26 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+//const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
 function login(e) {
   e.preventDefault();
-  console.log(inputLoginUsername.value);
-  console.log(inputLoginPin.value);
   if (inputLoginUsername.value === '' || inputLoginPin.value === '') {
     labelWelcome.textContent = 'Veuillez remplir tous les champs !';
   } else {
     const checkedId = accounts.find(account => {
-      return (
-        account.owner.toLowerCase() === inputLoginUsername.value.toLowerCase()
-      );
+      return account.owner.toLowerCase() === inputLoginUsername.value.toLowerCase();
     });
-    console.log(checkedId);
+
     if (checkedId?.pin === Number(inputLoginPin.value)) {
       labelWelcome.textContent = `Bienvenue ${checkedId.owner}`;
       containerApp.classList.remove('hidden');
       inputLoginUsername.value = 'Utilisateur';
       inputLoginPin.value = 'Codes';
       displayMovements(checkedId.movements);
+      displayBalance(checkedId);
     } else {
       labelWelcome.textContent = 'Nom d’utilisateur ou PIN incorrect';
     }
@@ -108,26 +105,41 @@ function login(e) {
 
 btnLogin.addEventListener('click', login);
 
-//////////////////////GESTION DES MOUVEMENTS BANCAIRES/////////////////////
+function displayBalance(account) {
+  const balance = account.movements.reduce((acc, mov) => acc + mov, 0); 
+  labelBalance.textContent = `${balance}€`; 
+}
 
+// Gestion des mouvements 
 function displayMovements(arr) {
-  arr.forEach(element => {
-    
-      const mouvementType = element > 0 ? 'deposit': 'withdrawal'
-
-      movementRow.insertAdjacentHTML(
-        'beforebegin',
-        `
+  movementRow.innerHTML = ''; 
+  arr.forEach((element, index) => {
+    const mouvementType = element > 0 ? 'deposit' : 'withdrawal';
+    movementRow.insertAdjacentHTML(
+      'beforebegin',
+      `
         <div class="movements__row">
-          <div class="movements__type movements__type--${mouvementType}">${mouvementType === 'deposit'? 'Dépot' : 'Rétrait' } </div>
+          <div class="movements__type movements__type--${mouvementType}">${
+        index + 1
+      } ${mouvementType === 'deposit' ? 'Dépot' : 'Rétrait'} </div>
           <div class="movements__date">Il y a 3 jours</div>
           <div class="movements__value">${element}€</div>
         </div>
-        `
-      );
-    } 
-  );
+      `
+    );
+  });
 }
 
-//////GESTION DES TRI///////////////////////////////
+// Gestion du tri
+function sorted() {
+  if (checkedId) {
+    console.log('Mouvements avant tri:', checkedId.movements); // Debug
+    const sortedMovements = checkedId.movements.slice().sort((a, b) => a - b);
+    console.log('Mouvements après tri:', sortedMovements); // Debug
+    displayMovements(sortedMovements);
+    displayBalance(checkedId);
+  } 
+}
+
+btnSort.addEventListener('click', sorted);
 
