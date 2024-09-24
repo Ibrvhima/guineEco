@@ -50,7 +50,12 @@ const containerMovements = document.querySelector('.movements');
 ////////////////////////////////////////////////////////////////
 const movementTypeDeposit = document.querySelector('.movements__type--deposit');
 const somValue = document.querySelector('.movements__value');
+const movementType = document.querySelectorAll('.movements__type');
+const movementDate = document.querySelectorAll('.movements__date');
 const movementRow = document.querySelector('.movements__row');
+const defaultRow = document.querySelectorAll('.default_row');
+const transferLabel = document.querySelector('.form__label');
+const loanLabel = document.querySelector('.form__label--loan');
 ///////////////////////////////////////////////////////////////
 
 const btnLogin = document.querySelector('.login__btn');
@@ -77,26 +82,32 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-//const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-
+let currentAccount;
+let totalBalance;
 function login(e) {
   e.preventDefault();
+  console.log(inputLoginUsername.value);
+  console.log(inputLoginPin.value);
   if (inputLoginUsername.value === '' || inputLoginPin.value === '') {
     labelWelcome.textContent = 'Veuillez remplir tous les champs !';
   } else {
     const checkedId = accounts.find(account => {
-      return account.owner.toLowerCase() === inputLoginUsername.value.toLowerCase();
+      return (
+        account.owner.toLowerCase() === inputLoginUsername.value.toLowerCase()
+      );
     });
-
+    console.log(checkedId);
     if (checkedId?.pin === Number(inputLoginPin.value)) {
       labelWelcome.textContent = `Bienvenue ${checkedId.owner}`;
       containerApp.classList.remove('hidden');
-      inputLoginUsername.value = 'Utilisateur';
-      inputLoginPin.value = 'Codes';
-      displayMovements(checkedId.movements);
-      displayBalance(checkedId);
+      inputLoginUsername.value = inputLoginPin.value = '';
+      currentAccount = checkedId;
+      displayMovements(currentAccount.movements);
+      calcDisplayBalance();
+      calcDisplaySummary();
     } else {
       labelWelcome.textContent = 'Nom d’utilisateur ou PIN incorrect';
     }
@@ -104,42 +115,134 @@ function login(e) {
 }
 
 btnLogin.addEventListener('click', login);
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
-function displayBalance(account) {
-  const balance = account.movements.reduce((acc, mov) => acc + mov, 0); 
-  labelBalance.textContent = `${balance}€`; 
-}
-
-// Gestion des mouvements 
 function displayMovements(arr) {
-  movementRow.innerHTML = ''; 
-  arr.forEach((element, index) => {
-    const mouvementType = element > 0 ? 'deposit' : 'withdrawal';
-    movementRow.insertAdjacentHTML(
-      'beforebegin',
+  containerMovements.innerHTML = '';
+  arr.forEach((element, idx) => {
+    let type = element > 0 ? 'deposit' : 'withdrawal';
+    let typeText = type === 'deposit' ? 'Dépot' : 'Rétrait';
+    containerMovements.insertAdjacentHTML(
+      'beforeend',
       `
-        <div class="movements__row">
-          <div class="movements__type movements__type--${mouvementType}">${
-        index + 1
-      } ${mouvementType === 'deposit' ? 'Dépot' : 'Rétrait'} </div>
-          <div class="movements__date">Il y a 3 jours</div>
-          <div class="movements__value">${element}€</div>
-        </div>
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${
+        idx + 1
+      } ${typeText}</div>
+        <div class="movements__date">Il y a 3 jours</div>
+        <div class="movements__value">${element}€</div>
+      </div>
       `
     );
   });
 }
 
-// Gestion du tri
+/////////////////////////////////////////////////////////////
+
 function sorted() {
-  if (checkedId) {
-    console.log('Mouvements avant tri:', checkedId.movements); // Debug
-    const sortedMovements = checkedId.movements.slice().sort((a, b) => a - b);
-    console.log('Mouvements après tri:', sortedMovements); // Debug
-    displayMovements(sortedMovements);
-    displayBalance(checkedId);
-  } 
+  if (currentAccount) {
+    currentAccount.movements.sort((a, b) => b - a);
+    displayMovements(currentAccount.movements);
+  }
 }
 
 btnSort.addEventListener('click', sorted);
 
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+function calcDisplayBalance() {
+  const balance = currentAccount.movements.reduce(
+    (sum, current) => sum + current
+  );
+
+  totalBalance = balance;
+  labelBalance.textContent = `${balance}€`;
+}
+
+//////////////////////////////////////////////////////////////
+
+function calcDisplaySummary() {
+  const deposits = currentAccount.movements
+    .filter(mov => mov > 0)
+    .reduce((sum, current) => sum + current, 0);
+  labelSumIn.textContent = `+${deposits}€`;
+
+  const withdrawals = currentAccount.movements
+    .filter(mov => mov < 0)
+    .reduce((sum, current) => sum + current, 0);
+  labelSumOut.textContent = `${withdrawals}€`;
+
+  const rate = currentAccount.interestRate;
+
+  const interestTotal = currentAccount.movements
+    .map(current => current * rate)
+    .filter(current => current >= 1)
+    .reduce((sum, current) => sum + current, 0);
+
+  labelSumInterest.textContent = `+${interestTotal}€`;
+  console.log(interestTotal);
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function sendMoney(e) {
+  e.preventDefault();
+  const amount = inputTransferAmount.value;
+  const checkRecipient = accounts.find(
+    recipient => recipient.owner === inputTransferTo.value
+  );
+  if (checkRecipient) {
+    if (amount > 0 && amount <= totalBalance) {
+      checkRecipient.movements.push(amount * 1);
+      currentAccount.movements.push(amount * -1);
+      displayMovements(currentAccount.movements);
+      calcDisplaySummary();
+      calcDisplayBalance();
+      transferLabel.classList.remove('red')
+      transferLabel.textContent = 'Transfert effectué avec succès';
+      inputTransferTo.value = inputTransferAmount.value = '';
+    } else {
+      transferLabel.textContent = 'Solde insuffisant !!';
+    }
+  } else {
+    transferLabel.textContent = 'Destinataire introuvable';
+  }
+}
+
+btnTransfer.addEventListener('click', sendMoney);
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+function requestLoan(e) {
+  e.preventDefault();
+  const requestAmount = inputLoanAmount.value;
+  const checkAmount = currentAccount.movements.find(
+    amount => amount >= (requestAmount * 10) / 100
+  );
+  if (requestAmount > 0) {
+    if (checkAmount) {
+      currentAccount.movements.push(requestAmount * 1);
+      displayMovements(currentAccount.movements);
+      calcDisplaySummary();
+      calcDisplayBalance();
+      loanLabel.textContent = "Prêt effectué avec succès".classList.remove('red')
+    } else {
+      loanLabel.textContent = "Montant élévé"
+    }
+  } else {
+    loanLabel.textContent = "Montant invalide"
+  }
+}
+
+btnLoan.addEventListener('click', requestLoan);
+
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+function closeAccount(){
+
+}
