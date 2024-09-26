@@ -262,3 +262,30 @@ function closeAccount(e) {
 }
 
 btnClose.addEventListener('click', closeAccount);
+
+////////////////////////////////////////////////////////////////////
+
+let timer;
+
+
+function startLogoutTimer() {
+  let time = 300; 
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, '0');
+    const sec = String(time % 60).padStart(2, '0');
+
+    labelTimer.textContent = `${min}:${sec}`;
+    if (time === 0) {
+      clearInterval(timer);
+      alert('Vous avez été déconnecté(e) pour cause d’inactivité.');
+
+      containerApp.classList.add('hidden');
+    }
+    time--;
+  };
+
+  // Exécuter la fonction tick toutes les secondes
+  tick(); // Appeler immédiatement pour afficher la première mise à jour
+  timer = setInterval(tick, 1000); // Appeler tick toutes les 1 seconde
+};
+
