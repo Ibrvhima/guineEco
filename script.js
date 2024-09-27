@@ -218,6 +218,17 @@ btnTransfer.addEventListener('click', sendMoney);
 
 function requestLoan(e) {
   e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value)
+  if(!isNaN(amount)){
+    console.log(`le montant est un nombre valide: ${amount}`);
+  }
+  else{
+    console.log(`Erreur: montant non valide`);
+  }
+
+  const roaundAmount = Math.round(amount * 100)/100
+  console.log(`Montant arrondi: ${roaundAmount}`);
   const requestAmount = inputLoanAmount.value;
   const checkAmount = currentAccount.movements.find(
     amount => amount >= (requestAmount * 10) / 100
@@ -267,7 +278,6 @@ btnClose.addEventListener('click', closeAccount);
 
 let timer;
 
-
 function startLogoutTimer() {
   let time = 300; 
   const tick = function () {
@@ -284,8 +294,7 @@ function startLogoutTimer() {
     time--;
   };
 
-  // Exécuter la fonction tick toutes les secondes
-  tick(); // Appeler immédiatement pour afficher la première mise à jour
-  timer = setInterval(tick, 1000); // Appeler tick toutes les 1 seconde
+  tick();
+  timer = setInterval(tick, 1000); 
 };
 
